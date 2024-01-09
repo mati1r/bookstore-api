@@ -1,27 +1,29 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Filters\AuthorFilter;
+use App\Http\Resources\AuthorCollection;
+use App\Http\Resources\AuthorResource;
+use App\Http\Controllers\Controller;
 use App\Models\Author;
 use App\Http\Requests\StoreAuthorRequest;
 use App\Http\Requests\UpdateAuthorRequest;
+use \Illuminate\Http\Request;
 
 class AuthorController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
-    }
+        $filter = new AuthorFilter();
+        $filterItems = $filter->transform($request);
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        $authors = Author::where($filterItems)->get();
+
+        return new AuthorCollection($authors);
     }
 
     /**
@@ -29,7 +31,7 @@ class AuthorController extends Controller
      */
     public function store(StoreAuthorRequest $request)
     {
-        //
+        return Author::create($request->all());
     }
 
     /**
@@ -37,15 +39,7 @@ class AuthorController extends Controller
      */
     public function show(Author $author)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Author $author)
-    {
-        //
+        return new AuthorResource($author);
     }
 
     /**
@@ -53,7 +47,7 @@ class AuthorController extends Controller
      */
     public function update(UpdateAuthorRequest $request, Author $author)
     {
-        //
+        $author->update($request->all());
     }
 
     /**
@@ -61,6 +55,6 @@ class AuthorController extends Controller
      */
     public function destroy(Author $author)
     {
-        //
+        $author->delete();
     }
 }

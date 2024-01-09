@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\AuthorController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -22,4 +23,6 @@ Route::post('/auth/login', [UserController::class,'loginUser']);
 Route::group(['middleware'=> 'auth:sanctum'], function () {
     Route::post('/auth/logout', [UserController::class,'logout']);
     Route::post('/auth/changePassword', [UserController::class,'changePassword']);
+
+    Route::apiResource('authors', AuthorController::class);
 });

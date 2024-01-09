@@ -11,7 +11,9 @@ class UpdateAuthorRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        $user = $this->user();
+
+        return $user != null && $user->tokenCan('user');
     }
 
     /**
@@ -21,8 +23,19 @@ class UpdateAuthorRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            //
-        ];
+        $method = $this->method();
+
+        if($method == "PUT"){
+            return [
+                'name' => ['required'],
+                'surname' => ['required']
+            ];
+        }
+        else{
+            return [
+                'name' => ['sometimes', 'required'],
+                'surname' => ['sometimes', 'required']
+            ];
+        }
     }
 }

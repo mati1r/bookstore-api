@@ -11,7 +11,11 @@ class StoreAddressRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        $user = $this->user();
+
+        error_log($user);
+
+        return $user != null && $user->tokenCan('user');
     }
 
     /**
@@ -22,7 +26,8 @@ class StoreAddressRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => ['required'],
+            'surname' => ['required']
         ];
     }
 }
