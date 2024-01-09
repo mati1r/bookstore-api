@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\AuthorController;
+use App\Http\Controllers\Api\GenreController;
+use App\Http\Controllers\Api\BookController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -25,4 +27,6 @@ Route::group(['middleware'=> 'auth:sanctum'], function () {
     Route::post('/auth/changePassword', [UserController::class,'changePassword']);
 
     Route::apiResource('authors', AuthorController::class);
+    Route::apiResource('genres', GenreController::class);
+    Route::apiResource('books', BookController::class);
 });

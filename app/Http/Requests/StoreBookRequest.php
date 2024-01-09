@@ -11,7 +11,9 @@ class StoreBookRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        $user = $this->user();
+
+        return $user != null && $user->tokenCan('user');
     }
 
     /**
@@ -22,7 +24,15 @@ class StoreBookRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'publisher' => ['required','string'],
+            'title' => ['required','string'],
+            'price' => ['required','integer'],
+            'publish_year'=> ['required','integer'],
+            'picture' => ['required', 'image'],
+            'author_ids' => ['required','array'],
+            'author_ids.*' => ['exists:authors,id'],
+            'genre_ids' => ['required','array'],
+            'genre_ids.*' => ['exists:genres,id'],
         ];
     }
 }

@@ -9,6 +9,14 @@ class Book extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'publisher',
+        'title',
+        'price',
+        'publish_year',
+        'picture',
+    ];
+
     public function orders()
     {
         return $this->belongsToMany(Order::class)->withPivot('amount');

@@ -17,9 +17,10 @@ return new class extends Migration
             $table->string('title');
             $table->integer('price');
             $table->integer('publish_year');
-            $table->binary('picture');
             $table->timestamps();
         });
+
+        DB::statement("ALTER TABLE books ADD picture MEDIUMBLOB");
     }
 
     /**
