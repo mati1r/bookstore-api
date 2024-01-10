@@ -22,7 +22,7 @@ class OrderController extends Controller
         $user = $request->user();
 
         if(!($user != null && $user->tokenCan('admin'))){
-            return response()->json(['message'=> 'User is not allowed to view this records'],401);
+            return response()->json(['message'=> 'User is not allowed to view this records'], 401);
         }
 
         $filter = new OrderFilter();
@@ -75,9 +75,17 @@ class OrderController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Order $order)
+    public function show(Order $order, Request $request)
     {
-        //
+        $user = $request->user();
+
+        if(!($user != null && $user->tokenCan('admin'))){
+            return response()->json(['message'=> 'User is not allowed to view this record'], 401);
+        }
+
+        $order->load('books');
+        return new OrderResource($order);
+
     }
 
     /**
@@ -85,14 +93,27 @@ class OrderController extends Controller
      */
     public function update(UpdateOrderRequest $request, Order $order)
     {
-        //
+        $data = $request->all();
+        $order->update($data);
+
+        if (isset($data['books'])) {
+            $order->books()->sync($data['books']);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Order $order)
+    public function destroy(Order $order, Request $request)
     {
-        //
+        $user = $request->user();
+
+        if($user != null && $user->tokenCan('admin')){
+            $order->books()->detach();
+    
+            $order->delete();
+        }else{
+            return response()->json(['message'=> 'User is not allowed to delete this record'],401);
+        }
     }
 }
