@@ -29,7 +29,7 @@ class UpdateBookRequest extends FormRequest
             return [
                 'publisher' => ['required','string'],
                 'title' => ['required','string'],
-                'price' => ['required','integer'],
+                'price' => ['required','numeric'],
                 'publish_year'=> ['required','integer'],
                 'picture' => ['required', 'image'],
                 'author_ids' => ['required','array'],
@@ -42,7 +42,7 @@ class UpdateBookRequest extends FormRequest
             return [
                 'publisher' => ['sometimes','required','string'],
                 'title' => ['sometimes','required','string'],
-                'price' => ['sometimes','required','integer'],
+                'price' => ['sometimes','required','numeric'],
                 'publish_year'=> ['sometimes','required','integer'],
                 'picture' => ['sometimes','required', 'image'],
                 'author_ids' => ['sometimes','required','array'],

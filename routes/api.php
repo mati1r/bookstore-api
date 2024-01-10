@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\AuthorController;
 use App\Http\Controllers\Api\GenreController;
@@ -31,4 +32,5 @@ Route::group(['middleware'=> 'auth:sanctum'], function () {
     Route::apiResource('genres', GenreController::class);
     Route::apiResource('books', BookController::class);
     Route::apiResource('payments', PaymentController::class);
+    Route::apiResource('orders', OrderController::class);
 });
