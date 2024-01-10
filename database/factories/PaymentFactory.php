@@ -16,8 +16,28 @@ class PaymentFactory extends Factory
      */
     public function definition(): array
     {
+        $paymentMethods = $this->faker->randomElement(['karta VISA', 'płatność BLIK']);
+
         return [
-            //
+            'method' => $paymentMethods
         ];
+    }
+
+    public function visa()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'method' => 'karta VISA',
+            ];
+        });
+    }
+
+    public function blik()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'method' => 'płatność BLIK',
+            ];
+        });
     }
 }

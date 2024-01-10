@@ -13,7 +13,7 @@ class UpdateGenreRequest extends FormRequest
     {
         $user = $this->user();
 
-        return $user != null && $user->tokenCan('user');
+        return $user != null && $user->tokenCan('admin');
     }
 
     /**

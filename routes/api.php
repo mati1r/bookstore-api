@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\AuthorController;
 use App\Http\Controllers\Api\GenreController;
 use App\Http\Controllers\Api\BookController;
+use App\Http\Controllers\Api\PaymentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -29,4 +30,5 @@ Route::group(['middleware'=> 'auth:sanctum'], function () {
     Route::apiResource('authors', AuthorController::class);
     Route::apiResource('genres', GenreController::class);
     Route::apiResource('books', BookController::class);
+    Route::apiResource('payment', PaymentController::class);
 });

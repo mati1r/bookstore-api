@@ -20,6 +20,7 @@ class UserController extends Controller
                 "name"=> $request->name,
                 "email"=> $request->email,
                 "password" => Hash::make($request->password),
+                "user" => "user"
             ]);
 
             return response()->json([
@@ -27,6 +28,7 @@ class UserController extends Controller
                 "message" => "User created successfuly",
                 "token" => $user->createToken("API TOKEN", ["user"])->plainTextToken
             ], 200);
+
         }catch (\Exception $e){
             return response()->json([
                 "status" => false,
@@ -45,13 +47,28 @@ class UserController extends Controller
                 ], 401);
             }
 
-            $user = User::where("email", $request->email)->first();
+            $user = User::where("email", $request->email)->where('type', 'user')->first();
 
-            return response()->json([
-                "status"=> true,
-                "message"=> "User loged in successfuly",
-                "token" => $user->createToken("API TOKEN", ["user"])->plainTextToken
-            ],200);
+            if($user){
+
+                return response()->json([
+                    "status"=> true,
+                    "message"=> "User loged in successfuly",
+                    "token" => $user->createToken("API TOKEN", ["user"])->plainTextToken
+                ],200);
+            }
+
+            $user = User::where("email", $request->email)->where('type', 'admin')->first();
+
+            if($user){
+
+                return response()->json([
+                    "status"=> true,
+                    "message"=> "User loged in successfuly",
+                    "token" => $user->createToken("API TOKEN", ["admin"])->plainTextToken
+                ],200);
+            }
+
         }catch (\Exception $e){
             return response()->json([
                 "status" => false,

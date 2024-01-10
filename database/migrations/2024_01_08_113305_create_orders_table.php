@@ -17,6 +17,13 @@ return new class extends Migration
             $table->integer('address_id');
             $table->integer('payment_id');
             $table->dateTime('order_date');
+            $table->string('state');
+            $table->string('city');
+            $table->string('street');
+            $table->string('building_number');
+            $table->string('apartment_number');
+            $table->string('zip_code');
+            $table->string('total_price');
             $table->timestamps();
         });
     }
