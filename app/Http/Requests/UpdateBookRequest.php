@@ -11,7 +11,9 @@ class UpdateBookRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        $user = $this->user();
+
+        return $user != null && $user->tokenCan('user');
     }
 
     /**
@@ -21,8 +23,33 @@ class UpdateBookRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            //
-        ];
+        $method = $this->method();
+
+        if($method == "PUT"){
+            return [
+                'publisher' => ['required','string'],
+                'title' => ['required','string'],
+                'price' => ['required','integer'],
+                'publish_year'=> ['required','integer'],
+                'picture' => ['required', 'image'],
+                'author_ids' => ['required','array'],
+                'author_ids.*' => ['exists:authors,id'],
+                'genre_ids' => ['required','array'],
+                'genre_ids.*' => ['exists:genres,id'],
+            ];
+        }
+        else{
+            return [
+                'publisher' => ['sometimes','required','string'],
+                'title' => ['sometimes','required','string'],
+                'price' => ['sometimes','required','integer'],
+                'publish_year'=> ['sometimes','required','integer'],
+                'picture' => ['sometimes','required', 'image'],
+                'author_ids' => ['sometimes','required','array'],
+                'author_ids.*' => ['exists:authors,id'],
+                'genre_ids' => ['sometimes','required','array'],
+                'genre_ids.*' => ['exists:genres,id'],
+            ];
+        }
     }
 }

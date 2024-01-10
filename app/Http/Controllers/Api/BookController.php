@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Filters\BookFilter;
 use App\Http\Resources\BookCollection;
+use App\Http\Resources\BookResource;
 use App\Models\Book;
 use App\Http\Requests\StoreBookRequest;
 use App\Http\Requests\UpdateBookRequest;
@@ -20,7 +21,7 @@ class BookController extends Controller
         $filter = new BookFilter();
         $filterItems = $filter->transform($request);
 
-        $paginated = $request->query("paginated");
+        $paginated = $request->query("paginate");
 
         $books = Book::where($filterItems);
 
@@ -52,7 +53,6 @@ class BookController extends Controller
         }
 
         $pictureBase64 = base64_encode(file_get_contents($pictureFile->getRealPath()));
-        error_log($pictureBase64);
 
         $book = Book::create([
             'publisher' => $request->input('publisher'),
@@ -77,7 +77,8 @@ class BookController extends Controller
      */
     public function show(Book $book)
     {
-        //
+        $book->load('authors', 'genres');
+        return new BookResource($book);
     }
 
     /**
@@ -85,7 +86,16 @@ class BookController extends Controller
      */
     public function update(UpdateBookRequest $request, Book $book)
     {
-        //
+        $data = $request->all();
+        $book->update($data);
+
+        if (isset($data['author_ids'])) {
+            $book->authors()->sync($data['author_ids']);
+        }
+
+        if (isset($data['genre_ids'])) {
+            $book->genres()->sync($data['genre_ids']);
+        }
     }
 
     /**
@@ -93,6 +103,9 @@ class BookController extends Controller
      */
     public function destroy(Book $book)
     {
-        //
+        $book->authors()->detach();
+        $book->genres()->detach();
+
+        $book->delete();
     }
 }
