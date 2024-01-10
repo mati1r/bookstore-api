@@ -23,8 +23,17 @@ class UpdatePaymentRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            //
-        ];
+        $method = $this->method();
+
+        if($method == "PUT"){
+            return [
+                'method' => ['required', 'string']
+            ];
+        }
+        else{
+            return [
+                'method' => ['sometimes', 'required', 'string']
+            ];
+        }
     }
 }

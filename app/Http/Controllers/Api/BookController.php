@@ -101,11 +101,17 @@ class BookController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Book $book)
+    public function destroy(Book $book, Request $request)
     {
-        $book->authors()->detach();
-        $book->genres()->detach();
+        $user = $request->user();
 
-        $book->delete();
+        if($user != null && $user->tokenCan('admin')){
+            $book->authors()->detach();
+            $book->genres()->detach();
+    
+            $book->delete();
+        }else{
+            return response()->json(['message'=> 'User is not allowed to delete this record'],401);
+        }
     }
 }

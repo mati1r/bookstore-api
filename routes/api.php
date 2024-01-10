@@ -30,5 +30,5 @@ Route::group(['middleware'=> 'auth:sanctum'], function () {
     Route::apiResource('authors', AuthorController::class);
     Route::apiResource('genres', GenreController::class);
     Route::apiResource('books', BookController::class);
-    Route::apiResource('payment', PaymentController::class);
+    Route::apiResource('payments', PaymentController::class);
 });

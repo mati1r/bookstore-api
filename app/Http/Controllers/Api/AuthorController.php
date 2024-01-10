@@ -53,8 +53,14 @@ class AuthorController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Author $author)
+    public function destroy(Author $author, Request $request)
     {
-        $author->delete();
+        $user = $request->user();
+
+        if($user != null && $user->tokenCan('admin')){
+            $author->delete();
+        }else{
+            return response()->json(['message'=> 'User is not allowed to delete this record'],401);
+        }
     }
 }

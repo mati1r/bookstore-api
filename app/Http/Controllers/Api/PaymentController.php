@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Resources\PaymentResource;
 use App\Models\Payment;
 use App\Http\Requests\StorePaymentRequest;
 use App\Http\Requests\UpdatePaymentRequest;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 
 class PaymentController extends Controller
 {
@@ -14,7 +16,7 @@ class PaymentController extends Controller
      */
     public function index()
     {
-        //
+        return Payment::all();
     }
 
     /**
@@ -30,7 +32,7 @@ class PaymentController extends Controller
      */
     public function show(Payment $payment)
     {
-        //
+        return new PaymentResource($payment);
     }
 
     /**
@@ -38,14 +40,20 @@ class PaymentController extends Controller
      */
     public function update(UpdatePaymentRequest $request, Payment $payment)
     {
-        //
+        $payment->update($request->all());
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Payment $payment)
+    public function destroy(Payment $payment, Request $request)
     {
-        //
+        $user = $request->user();
+
+        if($user != null && $user->tokenCan('admin')){
+            $payment->delete();
+        }else{
+            return response()->json(['message'=> 'User is not allowed to delete this record'],401);
+        }
     }
 }

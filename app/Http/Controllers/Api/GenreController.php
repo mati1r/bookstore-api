@@ -53,8 +53,14 @@ class GenreController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Genre $genre)
+    public function destroy(Genre $genre, Request $request)
     {
-        $genre->delete();
+        $user = $request->user();
+
+        if($user != null && $user->tokenCan('admin')){
+            $genre->delete();
+        }else{
+            return response()->json(['message'=> 'User is not allowed to delete this record'],401);
+        }
     }
 }
